@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'Citas',
     'Usuarios',
+    'Tareas',
 ]
 
 APPEND_SLASH=False
