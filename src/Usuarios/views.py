@@ -14,13 +14,14 @@ from django.utils.decorators import method_decorator
 from .serializers import UserLoginSerializer, UserModelSerializer
 
 # VISTA PARA LISTAR A TODOS LOS USUARIOS
-@method_decorator(csrf_exempt, name='dispatch')
 class ListUsers(APIView):
+    # AQUI PROTEGEMOS LA VISTA PARA QUE SOLO USUARIOS VALIDOS PUEDAN ACCEDER
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         try:
+            # OBTENEMOS A TODOS LOS USUARIOS
             users = Usuarios.objects.all()
             serializer = UserModelSerializer(users, many=True)
             return Response({'users': serializer.data}, status=status.HTTP_200_OK)
@@ -30,11 +31,12 @@ class ListUsers(APIView):
 # VISTA PARA CREAR USUARIOS
 @method_decorator(csrf_exempt, name='dispatch')
 class CreateUser(APIView):
-
+    # AQUI LE DECIMOS A LA VISTA QUE PERMITA TODO
     permissions_classes = [permissions.AllowAny, ]
 
     def post(self, request):
         try:
+            # AQUI LE PASAMOS LOS DATOS QUE VIENEN DEL FRONTEND AL SERIALIZADOR
             serializer = UserSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
@@ -47,6 +49,7 @@ class CreateUser(APIView):
 # VISTA PARA EL LOGIN DE USUARIOS
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginUser(APIView):
+    # AQUI LE DECIMOS A LA VISTA QUE PERMITA TODO
     permission_classes = (permissions.AllowAny,) 
     # authentication_classes = (authentication.TokenAuthentication,)
 
@@ -71,12 +74,13 @@ class LoginUser(APIView):
 
 # VISTA PARA CERRAR SESION
 class LogoutUser(APIView):
-
+    # AQUI PROTEGEMOS LA VISTA PARA QUE SOLO USUARIOS VALIDOS PUEDAN ACCEDER
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
         try:
+            # Aqui eliminamos el token que se genero para el usuario
             request.user.auth_token.delete()
             logout(request)
             return Response({'success':'Has cerrado sesión correctamente'}, status=status.HTTP_200_OK)
@@ -86,11 +90,14 @@ class LogoutUser(APIView):
 # VISTA PARA ACTUALIZAR USUARIOS
 @method_decorator(csrf_exempt, name='dispatch')
 class UpdateUser(APIView):
+    # AQUI PROTEGEMOS LA VISTA PARA QUE SOLO USUARIOS VALIDOS PUEDAN ACCEDER
     authentication_classes = [authentication.TokenAuthentication,]
     permission_classes = [permissions.IsAuthenticated,]
     def put(self, request, pk):
         try:
+            # aqui obtenemos al usuario segun su id
             user = Usuarios.objects.filter(id=pk).first()
+            # aqui pasamos una instancia del usuario y los datos nuevos que vienen del frontend
             serializer = UserModelSerializer(instance=user, data=request.data)
             if serializer.is_valid():
                 serializer.save()
@@ -102,15 +109,17 @@ class UpdateUser(APIView):
 # VISTA PARA ELIMINAR USUARIOS
 @method_decorator(csrf_exempt, name='dispatch')
 class DeleteUser(APIView):
+    # AQUI PROTEGEMOS LA VISTA PARA QUE SOLO USUARIOS VALIDOS PUEDAN ACCEDER
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     def delete(self, request, pk):
         try:
+            # aqui obtenemos al usuario segun su id
             user = Usuarios.objects.filter(id=pk).first()
             if user:
                 user.delete()
                 return Response({'message':'Usuario eliminado exitosamente'}, status=status.HTTP_200_OK)
-            return Response({'message':'Usuario no registrado'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message':'No existe ese usuario'}, status=status.HTTP_400_BAD_REQUEST)
         except:
             return Response({'message':'Error al eliminar usuario'}, status=status.HTTP_400_BAD_REQUEST)
         

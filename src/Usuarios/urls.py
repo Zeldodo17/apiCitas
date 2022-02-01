@@ -8,6 +8,7 @@ from .views import (
     ListUsers,
     )
 
+# URLS DE LA APLICACION DE USUARIOS
 urlpatterns = [
     path('auth-login/', LoginUser.as_view(), name='login'),
     path('auth-logout/', LogoutUser.as_view(), name='logout'),

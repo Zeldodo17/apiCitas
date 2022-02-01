@@ -36,6 +36,7 @@ class UserSerializer(serializers.Serializer):
         else:
             return data
 
+# SERIALIZADOR PARA ACTUALIZAR USUARIO
 class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuarios
@@ -56,12 +57,10 @@ class UserLoginSerializer(serializers.Serializer):
 
     # Primero validamos los datos
     def validate(self, data):
-
         # authenticate recibe las credenciales, si son válidas devuelve el objeto del usuario
         user = authenticate(username=data['username'], password=data['password'])
         if not user:
             raise serializers.ValidationError({'message': 'Usuario y/o contraseña incorrectas'})
-
         # Guardamos el usuario en el contexto para posteriormente en create recuperar el token
         self.context['user'] = user
         return data
