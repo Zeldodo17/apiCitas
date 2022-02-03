@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import Hola
+from .views import createDate
 
 urlpatterns = [
-    path('hola/', Hola.as_view(), name='hola'),
+    path('createDate/', createDate.as_view())
 ]

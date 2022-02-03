@@ -1,4 +1,3 @@
-from tkinter.ttk import Style
 from rest_framework import serializers
 from .models import Usuarios
 from django.contrib.auth import password_validation, authenticate

@@ -32,7 +32,7 @@ class ListUsers(APIView):
 @method_decorator(csrf_exempt, name='dispatch')
 class CreateUser(APIView):
     # AQUI LE DECIMOS A LA VISTA QUE PERMITA TODO
-    permissions_classes = [permissions.AllowAny, ]
+    permission_classes = [permissions.AllowAny, ]
 
     def post(self, request):
         try:
