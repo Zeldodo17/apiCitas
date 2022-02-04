@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import createDate
+from .views import crudDate,UpdateDate
 
 urlpatterns = [
-    path('createDate/', createDate.as_view())
+    path('createDate/', crudDate.as_view(), name='createDate'),
+    path('updateDate/<int:pk>', UpdateDate.as_view(), name='updateDate'),
 ]
