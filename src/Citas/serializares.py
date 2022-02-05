@@ -1,11 +1,10 @@
-from email.policy import default
 from rest_framework import serializers
 from .models import Citas
 from Usuarios.models import Usuarios
 from Usuarios.serializers import UserModelSerializer
 
 class DateSerializer(serializers.Serializer):
-    id = serializers.ReadOnlyField()
+    id = serializers.CharField()
     Nombre_mascota = serializers.CharField()
     Propietario = serializers.CharField()
     Telefono = serializers.CharField()
@@ -19,6 +18,15 @@ class DateSerializer(serializers.Serializer):
         instance.Telefono = data.get('Telefono')
         instance.Fecha = data.get('Fecha')
         instance.Sintomas = data.get('Sintomas')
+        instance.save()
+        return instance
+    
+    def update(self, instance, data):
+        instance.Nombre_mascota = data.get('Nombre_mascota', instance.Nombre_mascota)
+        instance.Propietario = data.get(Usuarios.objects.get(nombres=data['Propietario']), instance.Propietario)
+        instance.Telefono = data.get('Telefono', instance.Telefono)
+        instance.Fecha = data.get('Fecha', instance.Fecha)
+        instance.Sintomas = data.get('Sintomas', instance.Sintomas)
         instance.save()
         return instance
     
