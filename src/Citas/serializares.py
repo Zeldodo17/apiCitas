@@ -12,6 +12,7 @@ class DateSerializer(serializers.Serializer):
     Sintomas = serializers.CharField(max_length = 2000)
 
     def create(self, data):
+        # Se crea una instancia del modelo Citas y se recojen los datos que vienen del frontend
         instance = Citas()
         instance.Nombre_mascota = data.get('Nombre_mascota')
         instance.Propietario = Usuarios.objects.get(nombres=data['Propietario'])
@@ -30,26 +31,10 @@ class DateSerializer(serializers.Serializer):
         instance.save()
         return instance
     
-    
-    
     def validate_nombre(self, data):
         date = Citas.objects.filter(Nombre_mascota=data)
         if len(date) != 0:
             raise serializers.ValidationError({'message':'Ya hay una cita para esa mascota, ingresa uno nuevo'})
         else:
             return data
-
-
-"""
-class UpdateDateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Citas
-        fields = '__all__'
-    
-    def update(self, instance, data):
-        date = super().update(instance, data)
-        date.Propietario = Usuarios.objects.get(nombres=data['Propietario'])
-        date.save()
-        return date
-"""
 
