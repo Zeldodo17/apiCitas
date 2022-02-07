@@ -4,7 +4,7 @@ from Usuarios.models import Usuarios
 from Usuarios.serializers import UserModelSerializer
 
 class DateSerializer(serializers.Serializer):
-    id = serializers.CharField()
+    id = serializers.ReadOnlyField()
     Nombre_mascota = serializers.CharField()
     Propietario = serializers.CharField()
     Telefono = serializers.CharField()
