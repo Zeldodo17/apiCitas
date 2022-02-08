@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('Usuarios.urls')),
     path('api/', include('Citas.urls')),
+    path('api/', include('Tareas.urls')),
     path("api/getCsrf/", GetCSRFToken.as_view(), name="")
 ]

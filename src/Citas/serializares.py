@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Citas
 from Usuarios.models import Usuarios
-from Usuarios.serializers import UserModelSerializer
 
 class DateSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
