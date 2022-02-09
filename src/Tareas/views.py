@@ -7,7 +7,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 from Citas.models import Citas
 from .models import Tareas
-from .serializer import TaskSerializer,TaskSerializer2
+from .serializer import (
+        TaskSerializer, 
+        TaskUpdateSerializer, 
+        TaskSerializer2
+    )
 
 # Listar todas las tareas
 class listTasks(APIView):
@@ -22,7 +26,6 @@ class listTasks(APIView):
         except:
             return Response({'error': 'Error al listar Citas'}, status=status.HTTP_400_BAD_REQUEST)
 
-
 # Crear Tarea
 @method_decorator(csrf_exempt, name='dispatch')
 class createTask(APIView):
@@ -36,9 +39,9 @@ class createTask(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response({'message':'Tarea creada exitosamente'}, status=status.HTTP_200_OK)
-            return Response({'message':'Tienes que llenar todos los campos', 'serializer':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'serializer':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response({'message':'Error al actualizar la Tarea',}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message':'Error al crear la Tarea',}, status=status.HTTP_400_BAD_REQUEST)
 
 # Actualizar tarea
 class updateTask(APIView):
@@ -49,7 +52,7 @@ class updateTask(APIView):
     def put(self, request, pk):
         try:
             tarea = Tareas.objects.filter(id=pk).first()
-            serializer = TaskSerializer(instance=tarea ,data=request.data)
+            serializer = TaskUpdateSerializer(instance=tarea, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response({'message':'Tarea actualizada exitosamente'}, status=status.HTTP_200_OK)
