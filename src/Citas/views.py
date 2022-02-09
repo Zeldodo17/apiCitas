@@ -78,6 +78,5 @@ class deleteDate(APIView):
                 date.delete()
                 return Response({'success': 'Cita eliminada exitosamente'}, status=status.HTTP_200_OK)
             return Response({'error': 'No existe ninguna cita con ese id'}, status=status.HTTP_400_BAD_REQUEST)
-
         except:
             return Response({'message': 'Error al actualizar cita'}, status=status.HTTP_400_BAD_REQUEST)

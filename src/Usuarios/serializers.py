@@ -32,8 +32,19 @@ class UserSerializer(serializers.Serializer):
         users = Usuarios.objects.filter(username = data)
         if len(users) != 0:
             raise serializers.ValidationError({'message':'Este nombre de usuario ya existe, ingrese uno nuevo'})
-        else:
-            return data
+        return data
+    
+    def validate_email(self, value):
+        user = Usuarios.objects.get(email=value)
+        if len(user) != 0:
+            raise serializers.ValidationError({'message': 'Ya existe un usuario con ese correo'})
+        return value
+    
+    def validate_telefono(self, value):
+        user = Usuarios.objects.get(telefono=value)
+        if len(user) != 0:
+            raise serializers.ValidationError({'message': 'Ya existe un usuario con ese número de telefono'})
+        return value
 
 # SERIALIZADOR PARA ACTUALIZAR USUARIO
 class UserModelSerializer(serializers.ModelSerializer):
