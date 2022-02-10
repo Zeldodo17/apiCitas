@@ -102,7 +102,7 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'api_citas',
+        'NAME': 'apicitas',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',

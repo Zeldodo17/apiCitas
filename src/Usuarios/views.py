@@ -28,6 +28,19 @@ class ListUsers(APIView):
         except:
             return Response({'message':'Error al listar usuarios'}, status=status.HTTP_400_BAD_REQUEST)
 
+class ListUser(APIView):
+    # AQUI PROTEGEMOS LA VISTA PARA QUE SOLO USUARIOS VALIDOS PUEDAN ACCEDER
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, pk):
+        # OBTENEMOS A TODOS LOS USUARIOS
+        user = Usuarios.objects.filter(id=pk).first()
+        if user:
+            serializer = UserModelSerializer(user, many=False)
+            return Response({'users': serializer.data}, status=status.HTTP_200_OK)
+        return Response({'message':'No hay ningun usuario con ese id'}, status=status.HTTP_400_BAD_REQUEST)
+
 # VISTA PARA CREAR USUARIOS
 @method_decorator(csrf_exempt, name='dispatch')
 class CreateUser(APIView):
@@ -35,16 +48,14 @@ class CreateUser(APIView):
     permission_classes = [permissions.AllowAny, ]
 
     def post(self, request):
-        try:
-            # AQUI LE PASAMOS LOS DATOS QUE VIENEN DEL FRONTEND AL SERIALIZADOR
-            serializer = UserSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response({'message':'Usuario creado exitosamente'}, status=status.HTTP_201_CREATED)
-            else:
-                return Response({'message':'Tienes que llenar todos los campos'}, status = status.HTTP_400_BAD_REQUEST)
-        except:
-            return Response({'message':'Error al crear usuario'}, status = status.HTTP_400_BAD_REQUEST)
+        # AQUI LE PASAMOS LOS DATOS QUE VIENEN DEL FRONTEND AL SERIALIZADOR
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message':'Usuario creado exitosamente'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'message':'Tienes que llenar todos los campos', "error": serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
+        return Response({'message':'Error al crear usuario'}, status = status.HTTP_400_BAD_REQUEST)
 
 # VISTA PARA EL LOGIN DE USUARIOS
 @method_decorator(csrf_exempt, name='dispatch')
@@ -70,7 +81,7 @@ class LoginUser(APIView):
             }
             return Response(data, status=status.HTTP_200_OK)
         except:
-            return Response({'message':'Error al iniciar sesion'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message':'Necesitas una cuenta para iniciar sesión'}, status=status.HTTP_400_BAD_REQUEST)
 
 # VISTA PARA CERRAR SESION
 class LogoutUser(APIView):
