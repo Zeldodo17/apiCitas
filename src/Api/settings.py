@@ -102,10 +102,10 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'apicitas',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
+        'NAME': 'sql3471751',
+        'USER': 'sql3471751',
+        'PASSWORD': 'LwN994GnYd',
+        'HOST': 'sql3.freesqldatabase.com',
         'PORT': 3306,
         'OPTIONS': {
             "init_command": "SET foreign_key_checks = 0;",
