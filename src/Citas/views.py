@@ -63,11 +63,10 @@ class updateDate(APIView):
         try:
             date = Citas.objects.filter(id=pk).first()
             serializer = DateModelSerializer(instance=date, data=request.data)
-            print(request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response({'success': 'Cita actualizada exitosamente'}, status=status.HTTP_200_OK)
-            return Response({'error': 'Tienes que llenar todos los campos', 'serializer':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except:
             return Response({'message': 'Error al actualizar cita'}, status=status.HTTP_400_BAD_REQUEST)
 
